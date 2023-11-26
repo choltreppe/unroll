@@ -30,9 +30,9 @@ let arr =
 gets expanded into:
 ```nim
 let arr = @[
-  (block: 4 + 2),
-  (block: 5 + 2),
-  (block: 6 + 2)
+  (4 + 2),
+  (5 + 2),
+  (6 + 2)
 ]
 ```
 

@@ -1,6 +1,6 @@
 import std/[macros, genasts]
 
-proc genUnrollMacro*(forLoop: NimNode, resultKind: NimNodeKind): NimNode =
+proc genUnrollMacro*(forLoop: NimNode, resultKind: NimNodeKind, inBlocks=false): NimNode =
   var forLoop = forLoop
 
   forLoop[^2] = forLoop[^2][1]
@@ -14,7 +14,9 @@ proc genUnrollMacro*(forLoop: NimNode, resultKind: NimNodeKind): NimNode =
         addVar forVar
     else:
       addVar forVar
-  genAstCall.add newBlockStmt(forLoop[^1])
+  genAstCall.add:
+    if inBlocks: newBlockStmt(forLoop[^1])
+    else: forLoop[^1]
   
   forLoop[^1] = 
     genAst(result = ident"result", genAstCall):
@@ -27,7 +29,7 @@ proc genUnrollMacro*(forLoop: NimNode, resultKind: NimNodeKind): NimNode =
     impl()
 
 macro unroll*(forLoop: ForLoopStmt): untyped =
-  genUnrollMacro(forLoop, nnkStmtList)
+  genUnrollMacro(forLoop, nnkStmtList, inBlocks=true)
 
 macro unrollMapArray*(forLoop: ForLoopStmt): untyped =
   genUnrollMacro(forLoop, nnkBracket)
