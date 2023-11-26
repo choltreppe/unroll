@@ -1,5 +1,7 @@
 ## Example
 
+### unroll
+
 ```nim
 for i, v in unroll([2, 3, 4]):
   echo i, ": ", v
@@ -14,3 +16,33 @@ block:
 block:
   echo 2, ": ", 4
 ```
+
+### unrollMapSeq
+
+unroll directly into a `seq`
+
+```nim
+let arr =
+  for v in unrollMapSeq([4, 5, 6]):
+    v + 2
+```
+
+gets expanded into:
+```nim
+let arr = @[
+  (block: 4 + 2),
+  (block: 5 + 2),
+  (block: 6 + 2)
+]
+```
+
+works with any type of loop:
+```nim
+const arr2 =
+  for v in unrollMapSeq('a' .. 'c'):
+    v & "1"
+```
+
+### unrollMapArray
+
+works exactly like `unrollMapSeq` but produces an array
